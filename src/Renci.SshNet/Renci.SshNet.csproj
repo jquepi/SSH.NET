@@ -168,11 +168,16 @@
     <Compile Include="RemotePathNoneTransformation.cs" />
     <Compile Include="RemotePathShellQuoteTransformation.cs" />
     <Compile Include="RemotePathTransformation.cs" />
+    <Compile Include="Security\Cryptography\InternalMD5\HashAlgorithm.cs" />
     <Compile Include="Security\Cryptography\HMACMD5.cs" />
     <Compile Include="Security\Cryptography\HMACSHA1.cs" />
     <Compile Include="Security\Cryptography\HMACSHA256.cs" />
     <Compile Include="Security\Cryptography\HMACSHA384.cs" />
     <Compile Include="Security\Cryptography\HMACSHA512.cs" />
+    <Compile Include="Security\Cryptography\InternalMD5\HashProviderBase.cs" />
+    <Compile Include="Security\Cryptography\InternalMD5\IHashProvider.cs" />
+    <Compile Include="Security\Cryptography\InternalMD5\MD5HashProvider.cs" />
+    <Compile Include="Security\Cryptography\MD5.cs" />
     <Compile Include="Security\GroupExchangeHashData.cs" />
     <Compile Include="Security\IKeyExchange.cs" />
     <Compile Include="Security\KeyExchangeDiffieHellmanGroupExchangeShaBase.cs" />

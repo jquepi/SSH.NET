@@ -692,8 +692,23 @@
     <Compile Include="..\Renci.SshNet\Security\Cryptography\HMACSHA512.cs">
       <Link>Security\Cryptography\HMACSHA512.cs</Link>
     </Compile>
+    <Compile Include="..\Renci.SshNet\Security\Cryptography\InternalMD5\HashAlgorithm.cs">
+      <Link>Security\InternalMD5\HashAlgorithm.cs</Link>
+    </Compile>
+    <Compile Include="..\Renci.SshNet\Security\Cryptography\InternalMD5\HashProviderBase.cs">
+      <Link>Security\InternalMD5\HashProviderBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Renci.SshNet\Security\Cryptography\InternalMD5\IHashProvider.cs">
+      <Link>Security\InternalMD5\IHashProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Renci.SshNet\Security\Cryptography\InternalMD5\MD5HashProvider.cs">
+      <Link>Security\InternalMD5\MD5HashProvider.cs</Link>
+    </Compile>
     <Compile Include="..\Renci.SshNet\Security\Cryptography\Key.cs">
       <Link>Security\Cryptography\Key.cs</Link>
+    </Compile>
+    <Compile Include="..\Renci.SshNet\Security\Cryptography\MD5.cs">
+      <Link>Security\MD5.cs</Link>
     </Compile>
     <Compile Include="..\Renci.SshNet\Security\Cryptography\RsaDigitalSignature.cs">
       <Link>Security\Cryptography\RsaDigitalSignature.cs</Link>
