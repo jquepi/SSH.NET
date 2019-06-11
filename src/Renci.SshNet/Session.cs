@@ -1885,7 +1885,7 @@ namespace Renci.SshNet
                                 // this may result in a SocketException (eg. An existing connection was forcibly
                                 // closed by the remote host) which we'll log and ignore as it means the socket
                                 // was already shut down
-                                _socket.Shutdown(SocketShutdown.Send);
+                                _socket.Shutdown(SocketShutdown.Both);
                             }
                             catch (SocketException ex)
                             {
