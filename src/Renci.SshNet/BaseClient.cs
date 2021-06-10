@@ -327,7 +327,7 @@ namespace Renci.SshNet
             }
         }
 
-        #region IDisposable Members
+#region IDisposable Members
 
         private bool _isDisposed;
 
@@ -386,7 +386,7 @@ namespace Renci.SshNet
             Dispose(false);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Stops the keep-alive timer, and waits until all timer callbacks have been
@@ -457,7 +457,7 @@ namespace Renci.SshNet
 
         private ISession CreateAndConnectSession()
         {
-            var session = _serviceFactory.CreateSession(ConnectionInfo);
+            var session = _serviceFactory.CreateSession(ConnectionInfo, _serviceFactory.CreateSocketFactory());
             session.HostKeyReceived += Session_HostKeyReceived;
             session.ErrorOccured += Session_ErrorOccured;
 

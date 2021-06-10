@@ -13,21 +13,13 @@ namespace Renci.SshNet.Tests.Classes
         private ConnectionInfo _connectionInfo;
         private ScpClient _scpClient;
         private FileInfo _fileInfo;
-        private string _path;
+        private string _remoteDirectory;
+        private string _remoteFile;
+        private string _remotePath;
         private string _transformedPath;
         private string _fileName;
         private IList<ScpUploadEventArgs> _uploadingRegister;
         private SshException _actualException;
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            if (_fileName != null)
-            {
-                File.Delete(_fileName);
-                _fileName = null;
-            }
-        }
 
         protected override void SetupData()
         {
@@ -36,7 +28,9 @@ namespace Renci.SshNet.Tests.Classes
             _fileName = CreateTemporaryFile(new byte[] { 1 });
             _connectionInfo = new ConnectionInfo("host", 22, "user", new PasswordAuthenticationMethod("user", "pwd"));
             _fileInfo = new FileInfo(_fileName);
-            _path = "/home/sshnet/" + random.Next();
+            _remoteDirectory = "/home/sshnet";
+            _remoteFile = random.Next().ToString();
+            _remotePath = _remoteDirectory + "/" + _remoteFile;
             _transformedPath = random.Next().ToString();
             _uploadingRegister = new List<ScpUploadEventArgs>();
         }
@@ -49,21 +43,28 @@ namespace Renci.SshNet.Tests.Classes
                                .Setup(p => p.CreateRemotePathDoubleQuoteTransformation())
                                .Returns(_remotePathTransformationMock.Object);
             _serviceFactoryMock.InSequence(sequence)
-                               .Setup(p => p.CreateSession(_connectionInfo))
+                               .Setup(p => p.CreateSocketFactory())
+                               .Returns(_socketFactoryMock.Object);
+            _serviceFactoryMock.InSequence(sequence)
+                               .Setup(p => p.CreateSession(_connectionInfo, _socketFactoryMock.Object))
                                .Returns(_sessionMock.Object);
             _sessionMock.InSequence(sequence).Setup(p => p.Connect());
             _serviceFactoryMock.InSequence(sequence).Setup(p => p.CreatePipeStream()).Returns(_pipeStreamMock.Object);
             _sessionMock.InSequence(sequence).Setup(p => p.CreateChannelSession()).Returns(_channelSessionMock.Object);
             _channelSessionMock.InSequence(sequence).Setup(p => p.Open());
             _remotePathTransformationMock.InSequence(sequence)
-                                         .Setup(p => p.Transform(_path))
+                                         .Setup(p => p.Transform(_remoteDirectory))
                                          .Returns(_transformedPath);
             _channelSessionMock.InSequence(sequence)
-                               .Setup(p => p.SendExecRequest(string.Format("scp -t {0}", _transformedPath)))
+                               .Setup(p => p.SendExecRequest(string.Format("scp -t -d {0}", _transformedPath)))
                                .Returns(false);
             _channelSessionMock.InSequence(sequence).Setup(p => p.Dispose());
             _pipeStreamMock.As<IDisposable>().InSequence(sequence).Setup(p => p.Dispose());
-        }
+
+            // On .NET Core, Dispose() in turn invokes Close() and since we're not mocking
+            // an interface, we need to expect this call as well
+            _pipeStreamMock.Setup(p => p.Close());
+}
 
         protected override void Arrange()
         {
@@ -74,11 +75,22 @@ namespace Renci.SshNet.Tests.Classes
             _scpClient.Connect();
         }
 
+        protected override void TearDown()
+        {
+            base.TearDown();
+
+            if (_fileName != null)
+            {
+                File.Delete(_fileName);
+                _fileName = null;
+            }
+        }
+
         protected override void Act()
         {
             try
             {
-                _scpClient.Upload(_fileInfo, _path);
+                _scpClient.Upload(_fileInfo, _remotePath);
                 Assert.Fail();
             }
             catch (SshException ex)
@@ -98,7 +110,7 @@ namespace Renci.SshNet.Tests.Classes
         [TestMethod]
         public void SendExecRequestOnChannelSessionShouldBeInvokedOnce()
         {
-            _channelSessionMock.Verify(p => p.SendExecRequest(string.Format("scp -t {0}", _transformedPath)), Times.Once);
+            _channelSessionMock.Verify(p => p.SendExecRequest(string.Format("scp -t -d {0}", _transformedPath)), Times.Once);
         }
 
         [TestMethod]
