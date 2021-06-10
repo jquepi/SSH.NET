@@ -1,6 +1,6 @@
 # Visual Studio build output
-src/**/bin/**
-src/**/obj/**
+**/bin/**
+**/obj/**
 test/**/bin/**
 test/**/obj/**
 
@@ -29,3 +29,9 @@ tools/*
 # Include the cake packages.config
 !tools/packages.config
 
+artifacts/
+
+**/.idea
+.nuke/temp
+
+.DS_Store

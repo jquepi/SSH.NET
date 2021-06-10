@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renci.SshNet", "Renci.SshNe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Renci.SshNet.Tests", "Renci.SshNet.Tests\Renci.SshNet.Tests.csproj", "{C45379B9-17B1-4E89-BC2E-6D41726413E8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\nuke\_build.csproj", "{3442A7E1-9AE6-4585-9F0C-3364CAEF9234}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3442A7E1-9AE6-4585-9F0C-3364CAEF9234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3442A7E1-9AE6-4585-9F0C-3364CAEF9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F5F8C90-0BD1-424F-997C-7BC6280919D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F5F8C90-0BD1-424F-997C-7BC6280919D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F5F8C90-0BD1-424F-997C-7BC6280919D1}.Debug|ARM.ActiveCfg = Debug|Any CPU
