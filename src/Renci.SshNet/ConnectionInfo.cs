@@ -359,7 +359,7 @@ namespace Renci.SshNet
                     {"arcfour256", new CipherInfo(256, (key, iv) => new Arc4Cipher(key, true))},
                     ////{"idea-cbc", typeof(...)},
                     {"cast128-cbc", new CipherInfo(128, (key, iv) => new CastCipher(key, new CbcCipherMode(iv), null))},
-                    ////{"rijndael-cbc@lysator.liu.se", typeof(...)},                
+                    ////{"rijndael-cbc@lysator.liu.se", typeof(...)},
                     {"aes128-ctr", new CipherInfo(128, (key, iv) => new AesCipher(key, new CtrCipherMode(iv), null))},
                     {"aes192-ctr", new CipherInfo(192, (key, iv) => new AesCipher(key, new CtrCipherMode(iv), null))},
                 };
@@ -400,8 +400,8 @@ namespace Renci.SshNet
 
             CompressionAlgorithms = new Dictionary<string, Type>
                 {
-                    //{"zlib@openssh.com", typeof(ZlibOpenSsh)}, 
-                    //{"zlib", typeof(Zlib)}, 
+                    //{"zlib@openssh.com", typeof(ZlibOpenSsh)},
+                    //{"zlib", typeof(Zlib)},
                     {"none", null},
                 };
 
@@ -477,6 +477,31 @@ namespace Renci.SshNet
         IList<IAuthenticationMethod> IConnectionInfoInternal.AuthenticationMethods
         {
             get { return AuthenticationMethods.Cast<IAuthenticationMethod>().ToList(); }
+        }
+
+        /// <summary>
+        /// Prioritises a specified algorithm
+        /// </summary>
+        public bool PrioritiseHostKeyAlgorithm(string algorithm)
+        {
+            var newOrderedAlgorithms = new Dictionary<string, Func<byte[], KeyHostAlgorithm>>();
+            if (HostKeyAlgorithms.ContainsKey(algorithm))
+            {
+                Func<byte[], KeyHostAlgorithm> value;
+                var found = HostKeyAlgorithms.TryGetValue(algorithm, out value);
+                if (found)
+                {
+                    newOrderedAlgorithms.Add(algorithm, value);
+                    HostKeyAlgorithms.Remove(algorithm);
+                    foreach (var pair in HostKeyAlgorithms)
+                    {
+                        newOrderedAlgorithms.Add(pair.Key, pair.Value);
+                    }
+                    HostKeyAlgorithms = newOrderedAlgorithms;
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
