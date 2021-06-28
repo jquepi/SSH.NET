@@ -5,6 +5,7 @@ using Moq;
 using Renci.SshNet.Tests.Common;
 using Renci.SshNet.Tests.Properties;
 using System;
+using System.Linq;
 
 namespace Renci.SshNet.Tests.Classes
 {
@@ -342,6 +343,45 @@ namespace Renci.SshNet.Tests.Classes
                 Assert.IsNull(ex.InnerException);
                 Assert.AreEqual("serviceFactory", ex.ParamName);
             }
+        }
+
+        [TestMethod]
+        [TestCategory("ConnectionInfo")]
+        public void PrioritiseHostKeyAlgorithmShouldAddThatAlgorithmToStartOfList()
+        {
+            var connectionInfo = new ConnectionInfo(Resources.HOST, Resources.USERNAME, new KeyboardInteractiveAuthenticationMethod(Resources.USERNAME));
+
+            var lastAlgorithm = connectionInfo.HostKeyAlgorithms.LastOrDefault();
+            Assert.IsNotNull(lastAlgorithm, "No host key algorithms found in connection info.");
+
+            var success = connectionInfo.PrioritiseHostKeyAlgorithm(lastAlgorithm.Key);
+
+            Assert.IsTrue(success, "Unable to prioritise host key algorithm");
+            Assert.AreEqual(lastAlgorithm, connectionInfo.HostKeyAlgorithms.FirstOrDefault(), "Host key algorithm was not prioritised.");
+        }
+
+        [TestMethod]
+        [TestCategory("ConnectionInfo")]
+        public void PrioritiseHostKeyAlgorithmShouldNotRemoveAnyAlgorithms()
+        {
+            var connectionInfo = new ConnectionInfo(Resources.HOST, Resources.USERNAME, new KeyboardInteractiveAuthenticationMethod(Resources.USERNAME));
+
+            var expectedCount = connectionInfo.HostKeyAlgorithms.Distinct().Count();
+            var success = connectionInfo.PrioritiseHostKeyAlgorithm(connectionInfo.HostKeyAlgorithms.LastOrDefault().Key);
+            
+            Assert.IsTrue(success, "Unable to prioritise host key algorithm");
+            Assert.AreEqual(expectedCount, connectionInfo.HostKeyAlgorithms.Distinct().Count(), "Host key algorithm count changed during prioritisation.");
+        }
+
+        [TestMethod]
+        [TestCategory("ConnectionInfo")]
+        public void PrioritiseHostKeyAlgorithmShouldReturnFalseOnNonExistentAlgorithm()
+        {
+            var connectionInfo = new ConnectionInfo(Resources.HOST, Resources.USERNAME, new KeyboardInteractiveAuthenticationMethod(Resources.USERNAME));
+
+            var success = connectionInfo.PrioritiseHostKeyAlgorithm("Not an algorithm");
+
+            Assert.IsFalse(success, "Success returned even though an invalid algorithm name was specified.");
         }
    }
 }
