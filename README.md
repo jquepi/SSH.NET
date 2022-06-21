@@ -1,4 +1,6 @@
-﻿ ![Logo](images/logo/png/SS-NET-icon-h50.png) SSH.NET
+﻿## **This fork is based on the `master` branch from the upstream SSH.NET repo, not `develop`**
+
+ ![Logo](images/logo/png/SS-NET-icon-h50.png) SSH.NET
 =======
 SSH.NET is a Secure Shell (SSH-2) library for .NET, optimized for parallelism.
 
